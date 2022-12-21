@@ -1,0 +1,57 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="450"
+		Width="450" Height="450"
+		MaxWidth="450" MaxHeight="450"
+		MinWidth="450" MinHeight="450"
+		WindowStartupLocation="CenterScreen"
+        x:Class="AvaloniaFormsConverter.App.AboutWindow"
+        Title="About this app...">
+	<StackPanel Orientation="Vertical" Spacing="10">
+		<Panel Height="64" />
+		<Image Width="64" Height="64" Source="resm:Avalonia.Skia.Assets.NoiseAsset_256X256_PNG.png?assembly=Avalonia.Skia" />
+		<StackPanel Spacing="5" HorizontalAlignment="Center" Orientation="Horizontal">
+			<TextBlock FontSize="20" FontWeight="DemiBold"  Text="AXAML to Code Converter" />
+			<TextBlock Text="1.0.0.0" />
+		</StackPanel>
+		<TextBlock FontSize="15" TextAlignment="Center" Text="by haltroy" />
+		<TabControl HorizontalAlignment="Center" VerticalAlignment="Stretch">
+			<TabItem Header="About">
+				<TextBox IsReadOnly="true" VerticalAlignment="Stretch" TextAlignment="Left" TextWrapping="Wrap" HorizontalAlignment="Stretch">
+					This program lets developers to quickly convert AXAML to Init code so access to the content is way simpler than searching the control.
+				</TextBox>
+			</TabItem>
+			<TabItem Header="License">
+				<StackPanel Orientation="Vertical" Spacing="10">
+					<TextBlock Margin="0 10 0 0" TextWrapping="Wrap" Text="This program is maintained in GNU General Public License version 3.0." />
+					<StackPanel Orientation="Horizontal" Spacing="5">
+						<TextBlock VerticalAlignment="Center" Text="View License:" />
+						<Button Click="Navigate" Content="Online" Tag="https://github.com/haltroy/AxamlToCodeConverter/master/LICENSE" />
+						<Button Click="Navigate" Content="Offline" Tag="$SELF$ --license" />
+					</StackPanel>
+				</StackPanel>
+			</TabItem>
+			<TabItem Header="Dev Team">
+				<StackPanel Orientation="Vertical" Spacing="10">
+					<!-- Devs -->
+					<StackPanel Orientation="Horizontal" Spacing="5">
+						<Image Width="32" Height="32" Source="resm:Avalonia.Skia.Assets.NoiseAsset_256X256_PNG.png?assembly=Avalonia.Skia" />
+						<StackPanel Orientation="Vertical" Spacing="5">
+							<TextBlock Text="haltroy" />
+							<StackPanel Orientation="Horizontal" Spacing="5">
+								<Button Click="Navigate" Content="Website" Tag="https://haltroy.com" />
+								<Button Click="Navigate" Content="Twitter" Tag="https://twitter.com/haltroy" />
+								<Button Click="Navigate" Content="GitHub" Tag="https://github.com/haltroy" />
+								<Button Click="Navigate" Content="Mastodon" Tag="https://mastodon.online/@haltroy" />
+								<Button Click="Navigate" Content="Reddit" Tag="https://reddit.com/r/haltroy" />
+							</StackPanel>
+						</StackPanel>
+					</StackPanel>
+					<!-- Add yours here, copy mine and edit -->
+				</StackPanel>
+			</TabItem>
+		</TabControl>
+	</StackPanel>
+</Window>
