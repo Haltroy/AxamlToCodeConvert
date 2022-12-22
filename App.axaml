@@ -1,0 +1,16 @@
+<!--
+
+Copyright (C) 2022 haltroy
+
+Use of this source code is governed by MIT License that can be found in
+https://github.com/haltroy/AxamlToCodeConvert/blob/main/LICENSE
+
+-->
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="AxamlToCodeConvert.App">
+	<Application.Styles>
+		<FluentTheme Mode="Dark" />
+		<StyleInclude Source="avares://AvaloniaEdit/AvaloniaEdit.xaml" />
+	</Application.Styles>
+</Application>

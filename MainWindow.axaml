@@ -1,0 +1,41 @@
+<!--
+
+Copyright (C) 2022 haltroy
+
+Use of this source code is governed by MIT License that can be found in
+https://github.com/haltroy/AxamlToCodeConvert/blob/main/LICENSE
+
+-->
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:AvalonEdit="clr-namespace:AvaloniaEdit;assembly=AvaloniaEdit"
+        mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="450"
+        x:Class="AxamlToCodeConvert.MainWindow"
+		Icon="/logo.ico"
+        Title="AXAML to Code Converter">
+	<Grid RowDefinitions="40,20,*" ColumnDefinitions="*,*">
+		<Menu Grid.Row="0">
+			<MenuItem Header="Open a File..." Click="OpenFile" />
+			<MenuItem Header="About" Click="About" />
+		</Menu>
+		<TextBlock Text="XAML:" Grid.Row="1" Grid.Column="0" />
+		<TextBlock Text="Init():" Grid.Row="1" Grid.Column="1" />
+		<AvalonEdit:TextEditor Name="AXAML" Background="Transparent" Grid.Row="2" Grid.Column="0" FontFamily="Cascadia Code,Consolas,Menlo,Monospace"
+                               Foreground="#D4D4D4"
+                               HorizontalScrollBarVisibility="Auto"
+                               VerticalScrollBarVisibility="Visible"
+                               FontWeight="Light"
+                               FontSize="14"
+							   ShowLineNumbers="True">
+		</AvalonEdit:TextEditor>
+		<AvalonEdit:TextEditor Name="Code" Background="Transparent" Grid.Row="2" Grid.Column="1" IsReadOnly="True" FontFamily="Cascadia Code,Consolas,Menlo,Monospace"
+                               Foreground="#D4D4D4"
+                               HorizontalScrollBarVisibility="Auto"
+                               VerticalScrollBarVisibility="Visible"
+                               FontWeight="Light"
+							   ShowLineNumbers="True"
+                               FontSize="14" />
+	</Grid>
+</Window>

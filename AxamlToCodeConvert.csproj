@@ -8,12 +8,22 @@
     <None Remove=".gitignore" />
   </ItemGroup>
   <ItemGroup>
+    <AvaloniaResource Include="logo.ico" />
+    <AvaloniaResource Include="logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="LICENSE" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Avalonia" Version="0.10.18" />
+    <PackageReference Include="Avalonia.AvaloniaEdit" Version="0.10.12.2" />
     <PackageReference Include="Avalonia.Desktop" Version="0.10.18" />
     <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
     <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.18" />
+    <PackageReference Include="AvaloniaEdit.TextMate" Version="0.10.12.2" />
+    <PackageReference Include="TextMateSharp.Grammars" Version="1.0.50" />
    </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\AvaloniaFormsConvert.Base\AvaloniaFormsConvert.Base.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<AvaloniaResource Include="dev-team\**" />
+	</ItemGroup>
 </Project>

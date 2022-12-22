@@ -1,8 +1,16 @@
+/*
+ * Copyright (C) 2022 haltroy
+ *
+ * Use of this source code is governed by MIT License that can be found in
+ * https://github.com/haltroy/AxamlToCodeConvert/blob/main/LICENSE
+ *
+ */
+
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 
-namespace AvaloniaFormsConverter.App
+namespace AxamlToCodeConvert
 {
     public class App : Application
     {
