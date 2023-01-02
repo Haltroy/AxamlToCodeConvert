@@ -30,7 +30,7 @@ namespace AxamlToCodeConvert
             }
         }
 
-        public string ReadResource(string name)
+        public static string ReadResource(string name)
         {
             try
             {
@@ -39,11 +39,9 @@ namespace AxamlToCodeConvert
                 string resourcePath = name;
                 // Format: "{Namespace}.{Folder}.{filename}.{Extension}"
 
-                using (Stream stream = assembly.GetManifestResourceStream(resourcePath))
-                using (StreamReader reader = new StreamReader(stream))
-                {
-                    return reader.ReadToEnd();
-                }
+                using Stream stream = assembly.GetManifestResourceStream(resourcePath);
+                using StreamReader reader = new(stream);
+                return reader.ReadToEnd();
             }
             catch (System.Exception ex)
             {

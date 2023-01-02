@@ -3,15 +3,19 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
+	<Deterministic>true</Deterministic>
+	<DebugType>embedded</DebugType>
   </PropertyGroup>
   <ItemGroup>
     <None Remove=".gitignore" />
+    <None Remove="AvaloniaDictionary.xml" />
   </ItemGroup>
   <ItemGroup>
     <AvaloniaResource Include="logo.ico" />
     <AvaloniaResource Include="logo.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="AvaloniaDictionary.xml" />
     <EmbeddedResource Include="LICENSE" />
   </ItemGroup>
   <ItemGroup>
@@ -21,6 +25,7 @@
     <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
     <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.18" />
     <PackageReference Include="AvaloniaEdit.TextMate" Version="0.10.12.2" />
+    <PackageReference Include="FluentAvaloniaUI" Version="1.4.5" />
     <PackageReference Include="TextMateSharp.Grammars" Version="1.0.50" />
    </ItemGroup>
 	<ItemGroup>

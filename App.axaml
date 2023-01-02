@@ -8,9 +8,11 @@ https://github.com/haltroy/AxamlToCodeConvert/blob/main/LICENSE
 -->
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="AxamlToCodeConvert.App">
+             x:Class="AxamlToCodeConvert.App"
+			 xmlns:sty="using:FluentAvalonia.Styling">
 	<Application.Styles>
 		<FluentTheme Mode="Dark" />
 		<StyleInclude Source="avares://AvaloniaEdit/AvaloniaEdit.xaml" />
+		<sty:FluentAvaloniaTheme />
 	</Application.Styles>
 </Application>

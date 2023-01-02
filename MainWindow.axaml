@@ -11,31 +11,23 @@ https://github.com/haltroy/AxamlToCodeConvert/blob/main/LICENSE
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:AvalonEdit="clr-namespace:AvaloniaEdit;assembly=AvaloniaEdit"
+		xmlns:ui="using:FluentAvalonia.UI.Controls"
+		xmlns:uip="using:FluentAvalonia.UI.Controls.Primitives"
         mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="450"
         x:Class="AxamlToCodeConvert.MainWindow"
 		Icon="/logo.ico"
         Title="AXAML to Code Converter">
-	<Grid RowDefinitions="40,20,*" ColumnDefinitions="*,*">
+	<Grid RowDefinitions="20,*">
 		<Menu Grid.Row="0">
-			<MenuItem Header="Open a File..." Click="OpenFile" />
+			<MenuItem Header="File">
+				<MenuItem Header="Open a File..." Click="OpenFile" />
+				<MenuItem Header="Save..." Click="SaveFile" />
+				<MenuItem Header="Save all..." Click="SaveAll" />
+				<Separator />
+				<MenuItem Header="Quit" Click="Quit" />
+			</MenuItem>
 			<MenuItem Header="About" Click="About" />
 		</Menu>
-		<TextBlock Text="XAML:" Grid.Row="1" Grid.Column="0" />
-		<TextBlock Text="Init():" Grid.Row="1" Grid.Column="1" />
-		<AvalonEdit:TextEditor Name="AXAML" Background="Transparent" Grid.Row="2" Grid.Column="0" FontFamily="Cascadia Code,Consolas,Menlo,Monospace"
-                               Foreground="#D4D4D4"
-                               HorizontalScrollBarVisibility="Auto"
-                               VerticalScrollBarVisibility="Visible"
-                               FontWeight="Light"
-                               FontSize="14"
-							   ShowLineNumbers="True">
-		</AvalonEdit:TextEditor>
-		<AvalonEdit:TextEditor Name="Code" Background="Transparent" Grid.Row="2" Grid.Column="1" IsReadOnly="True" FontFamily="Cascadia Code,Consolas,Menlo,Monospace"
-                               Foreground="#D4D4D4"
-                               HorizontalScrollBarVisibility="Auto"
-                               VerticalScrollBarVisibility="Visible"
-                               FontWeight="Light"
-							   ShowLineNumbers="True"
-                               FontSize="14" />
+		<ui:TabView Grid.Row="1" CloseButtonOverlayMode="OnPointerOver" Name="Tabs" />
 	</Grid>
 </Window>
