@@ -42,6 +42,20 @@ https://github.com/haltroy/AxamlToCodeConvert/blob/main/LICENSE
 					</StackPanel>
 				</StackPanel>
 			</TabItem>
+			<TabItem Header="Credits">
+				<StackPanel Orientation="Vertical" Spacing="10">
+					<StackPanel Orientation="Horizontal" Spacing="10">
+						<TextBlock Text="● FluentAvalonia" VerticalAlignment="Center" FontSize="15" />
+						<TextBlock Text="for tab view" VerticalAlignment="Center" FontSize="12" />
+						<Button Content="Visit" Click="Navigate" Tag="https://github.com/amwx/FluentAvalonia" />
+					</StackPanel>
+					<StackPanel Orientation="Horizontal" Spacing="10">
+						<TextBlock Text="● AvaloniaEdit" VerticalAlignment="Center" FontSize="15" />
+						<TextBlock Text="for syntax highlighting" VerticalAlignment="Center" FontSize="12" />
+						<Button Content="Visit" Click="Navigate" Tag="https://github.com/AvaloniaUI/AvaloniaEdit" />
+					</StackPanel>
+				</StackPanel>
+			</TabItem>
 			<TabItem Header="Dev Team">
 				<StackPanel Orientation="Vertical" Spacing="10">
 					<!-- Devs -->

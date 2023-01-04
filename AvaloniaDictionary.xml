@@ -1,4 +1,29 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <root>
-	<!-- TODO -->
+	<Margin>
+		<Replace OldValue=" " NewValue=", " />
+		<Newify />
+	</Margin>
+	<Text>
+		<Stringify />
+	</Text>
+	<Name>
+		<Stringify />
+	</Name>
+	<Title>
+		<Stringify />
+	</Title>
+	<Content>
+		<Stringify />
+	</Content>
+
+	<Header>
+		<Stringify />
+	</Header>
+	<Orientation>
+		<Insert FullLine="true">$control$.$type$ = $type$.$value$</Insert>
+	</Orientation>
+	<VerticalAlignment>
+		<Insert FullLine="true">$control$.$type$ = $type$.$value$</Insert>
+	</VerticalAlignment>
 </root>

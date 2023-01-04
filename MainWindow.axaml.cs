@@ -15,7 +15,10 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using AvaloniaEdit;
 using AvaloniaEdit.TextMate;
+using FluentAvalonia.Core;
 using FluentAvalonia.UI.Controls;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
@@ -42,8 +45,109 @@ namespace AxamlToCodeConvert
             {
                 Tabs = panel.FindControl<TabView>("Tabs");
                 Tabs.TabCloseRequested += CloseTab;
-                Tabs.AddTabButtonClick += (sender, e) => { OpenFile(Tabs, new RoutedEventArgs()); };
+                Tabs.AddTabButtonClick += NewFile;
             }
+        }
+
+        private void NewFile(TabView sender, System.EventArgs args)
+        {
+            if (Tabs != null && Tabs.TabItems is AvaloniaList<object> list)
+            {
+                string axaml = "";
+                TabViewItem item = new()
+                {
+                    Header = Path.GetFileNameWithoutExtension("New File"),
+                    Name = "newfile.axaml",
+                };
+                list.Add(item);
+                Grid grid = new()
+                {
+                    Name = item.Header as string,
+                    ColumnDefinitions = new ColumnDefinitions("*,*"),
+                    RowDefinitions = new RowDefinitions("20,*")
+                };
+                item.Content = grid;
+
+                var _registryOptions = new TextMateSharp.Grammars.RegistryOptions(TextMateSharp.Grammars.ThemeName.DarkPlus);
+
+                TextEditor input = new()
+                {
+                    Text = axaml,
+                    Name = "AXAML",
+                    Background = new SolidColorBrush(Colors.Transparent),
+                    HorizontalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Auto,
+                    VerticalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Auto,
+                    ShowLineNumbers = true,
+                    FontSize = 14,
+                };
+                TextEditor output = new()
+                {
+                    Text = Converter.Convert(input.Text),
+                    Name = "code",
+                    Background = new SolidColorBrush(Colors.Transparent),
+                    HorizontalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Auto,
+                    VerticalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Auto,
+                    ShowLineNumbers = true,
+                    FontSize = 14,
+                    IsReadOnly = true,
+                };
+
+                TextBlock axamlTitle = new()
+                {
+                    Text = "AXAML:",
+                };
+
+                TextBlock codeTitle = new()
+                {
+                    Text = "Designer.cs:",
+                };
+
+                grid.Children.Add(axamlTitle);
+                grid.Children.Add(codeTitle);
+                grid.Children.Add(input);
+                grid.Children.Add(output);
+
+                Grid.SetColumn(axamlTitle, 0);
+                Grid.SetRow(axamlTitle, 0);
+                Grid.SetColumn(codeTitle, 1);
+                Grid.SetRow(codeTitle, 0);
+
+                Grid.SetColumn(input, 0);
+                Grid.SetRow(input, 1);
+
+                Grid.SetColumn(output, 1);
+                Grid.SetRow(output, 1);
+
+                //Initial setup of TextMate.
+                var _textMateInstallation = input.InstallTextMate(_registryOptions);
+                var _textMateInstallation2 = output.InstallTextMate(_registryOptions);
+
+                _textMateInstallation.SetGrammar(_registryOptions.GetScopeByLanguageId(_registryOptions.GetLanguageByExtension(".xml").Id));
+                _textMateInstallation2.SetGrammar(_registryOptions.GetScopeByLanguageId(_registryOptions.GetLanguageByExtension(".cs").Id));
+
+                input.TextChanged += (sender, e) =>
+                {
+                    output.Text = Converter.Convert(input.Text);
+                };
+
+                //input.PropertyChanged += (sender, e) =>
+                //{
+                //    if (e.Property == TextBlock.TextProperty)
+                //    {
+                //        output.Text = Converter.Convert(input.Text);
+                //    }
+                //};
+                Tabs.SelectedIndex = Tabs.TabItems.Count() - 1;
+            }
+        }
+
+        internal MainWindow OpenFiles(string[] args)
+        {
+            for (int i = 0; i < args.Length; i++)
+            {
+                OpenFile(args[i]);
+            }
+            return this;
         }
 
         private void CloseTab(object? sender, TabViewTabCloseRequestedEventArgs e)
@@ -71,6 +175,54 @@ namespace AxamlToCodeConvert
                     using var writer = new StreamWriter(fstr);
                     writer.WriteLine(editor.Text);
                 }
+            }
+        }
+
+        private void ReloadDict(object? sender, RoutedEventArgs e)
+        {
+            AxamlDictionary.Init(true);
+            if (Tabs != null && Tabs.TabItems is AvaloniaList<object> list)
+            {
+                for (int i = 0; i < list.Count; i++)
+                {
+                    if (list[i] is TabViewItem item && item.Header is string name && item.Content is Grid grid && grid.Children[grid.Children.Count - 1] is TextEditor output && grid.Children[grid.Children.Count - 2] is TextEditor input)
+                    {
+                        output.Text = Converter.Convert(input.Text);
+                    }
+                }
+            }
+        }
+
+        private void OpenDict(object? sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo()
+            {
+                FileName = AxamlDictionary.DictionariesLocation,
+                UseShellExecute = true,
+                Verb = "open"
+            });
+        }
+
+        private async void InstallDict(object? sender, RoutedEventArgs e)
+        {
+            OpenFileDialog dialog = new()
+            {
+                Title = "Open a file...",
+                AllowMultiple = true,
+                Filters = new System.Collections.Generic.List<FileDialogFilter>() { new FileDialogFilter() { Name = "Dictionary File", Extensions = { "xml" } } }
+            };
+
+            var str = await dialog.ShowAsync(this);
+            if (str != null)
+            {
+                for (int i = 0; i < str.Length; i++)
+                {
+                    if (!string.IsNullOrWhiteSpace(str[i]) && File.Exists(str[i]))
+                    {
+                        File.Copy(str[i], Path.Combine(AxamlDictionary.DictionariesLocation, new FileInfo(str[i]).Name));
+                    }
+                }
+                ReloadDict(sender, e);
             }
         }
 
@@ -118,94 +270,96 @@ namespace AxamlToCodeConvert
             {
                 for (int i = 0; i < str.Length; i++)
                 {
-                    if (!string.IsNullOrWhiteSpace(str[i]) && File.Exists(str[i]))
-                    {
-                        string axaml = "";
-                        using (var reader = new StreamReader(new FileStream(str[i], FileMode.Open, FileAccess.Read, FileShare.ReadWrite)))
-                        {
-                            axaml = reader.ReadToEnd();
-                        }
-                        TabViewItem item = new()
-                        {
-                            Header = Path.GetFileNameWithoutExtension(str[i]),
-                            Name = str[i],
-                        };
-                        list.Add(item);
-                        Grid grid = new()
-                        {
-                            Name = item.Header as string,
-                            ColumnDefinitions = new ColumnDefinitions("*,*"),
-                            RowDefinitions = new RowDefinitions("20,*")
-                        };
-                        item.Content = grid;
-
-                        var _registryOptions = new TextMateSharp.Grammars.RegistryOptions(TextMateSharp.Grammars.ThemeName.DarkPlus);
-
-                        TextEditor input = new()
-                        {
-                            Text = axaml,
-                            Name = "AXAML",
-                            Background = new SolidColorBrush(Colors.Transparent),
-                            HorizontalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Auto,
-                            VerticalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Auto,
-                            ShowLineNumbers = true,
-                            FontSize = 14,
-                        };
-                        TextEditor output = new()
-                        {
-                            Text = Converter.Convert(input.Text),
-                            Name = "code",
-                            Background = new SolidColorBrush(Colors.Transparent),
-                            HorizontalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Auto,
-                            VerticalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Auto,
-                            ShowLineNumbers = true,
-                            FontSize = 14,
-                            IsReadOnly = true,
-                        };
-
-                        TextBlock axamlTitle = new()
-                        {
-                            Text = "AXAML:",
-                        };
-
-                        TextBlock codeTitle = new()
-                        {
-                            Text = "Designer.cs:",
-                        };
-
-                        grid.Children.Add(axamlTitle);
-                        grid.Children.Add(codeTitle);
-                        grid.Children.Add(input);
-                        grid.Children.Add(output);
-
-                        Grid.SetColumn(axamlTitle, 0);
-                        Grid.SetRow(axamlTitle, 0);
-                        Grid.SetColumn(codeTitle, 1);
-                        Grid.SetRow(codeTitle, 0);
-
-                        Grid.SetColumn(input, 0);
-                        Grid.SetRow(input, 1);
-
-                        Grid.SetColumn(output, 1);
-                        Grid.SetRow(output, 1);
-
-                        //Initial setup of TextMate.
-                        var _textMateInstallation = input.InstallTextMate(_registryOptions);
-                        var _textMateInstallation2 = output.InstallTextMate(_registryOptions);
-
-                        _textMateInstallation.SetGrammar(_registryOptions.GetScopeByLanguageId(_registryOptions.GetLanguageByExtension(".xml").Id));
-                        _textMateInstallation2.SetGrammar(_registryOptions.GetScopeByLanguageId(_registryOptions.GetLanguageByExtension(".cs").Id));
-
-                        input.PropertyChanged += (sender, e) =>
-                        {
-                            if (e.Property == TextBlock.TextProperty)
-                            {
-                                output.Text = Converter.Convert(input.Text);
-                            }
-                        };
-                    }
+                    OpenFile(str[i]);
                 }
                 Tabs.SelectedIndex = list.Count - 1;
+            }
+        }
+
+        private void OpenFile(string str)
+        {
+            if (Tabs != null && Tabs.TabItems is AvaloniaList<object> list && !string.IsNullOrWhiteSpace(str) && File.Exists(str))
+            {
+                string axaml = "";
+                using (var reader = new StreamReader(new FileStream(str, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)))
+                {
+                    axaml = reader.ReadToEnd();
+                }
+                TabViewItem item = new()
+                {
+                    Header = Path.GetFileNameWithoutExtension(str),
+                    Name = str,
+                };
+                list.Add(item);
+                Grid grid = new()
+                {
+                    Name = item.Header as string,
+                    ColumnDefinitions = new ColumnDefinitions("*,*"),
+                    RowDefinitions = new RowDefinitions("20,*")
+                };
+                item.Content = grid;
+
+                var _registryOptions = new TextMateSharp.Grammars.RegistryOptions(TextMateSharp.Grammars.ThemeName.DarkPlus);
+
+                TextEditor input = new()
+                {
+                    Text = axaml,
+                    Name = "AXAML",
+                    Background = new SolidColorBrush(Colors.Transparent),
+                    HorizontalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Auto,
+                    VerticalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Auto,
+                    ShowLineNumbers = true,
+                    FontSize = 14,
+                };
+                TextEditor output = new()
+                {
+                    Text = Converter.Convert(input.Text),
+                    Name = "code",
+                    Background = new SolidColorBrush(Colors.Transparent),
+                    HorizontalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Auto,
+                    VerticalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Auto,
+                    ShowLineNumbers = true,
+                    FontSize = 14,
+                    IsReadOnly = true,
+                };
+
+                TextBlock axamlTitle = new()
+                {
+                    Text = "AXAML:",
+                };
+
+                TextBlock codeTitle = new()
+                {
+                    Text = "Designer.cs:",
+                };
+
+                grid.Children.Add(axamlTitle);
+                grid.Children.Add(codeTitle);
+                grid.Children.Add(input);
+                grid.Children.Add(output);
+
+                Grid.SetColumn(axamlTitle, 0);
+                Grid.SetRow(axamlTitle, 0);
+                Grid.SetColumn(codeTitle, 1);
+                Grid.SetRow(codeTitle, 0);
+
+                Grid.SetColumn(input, 0);
+                Grid.SetRow(input, 1);
+
+                Grid.SetColumn(output, 1);
+                Grid.SetRow(output, 1);
+
+                //Initial setup of TextMate.
+                var _textMateInstallation = input.InstallTextMate(_registryOptions);
+                var _textMateInstallation2 = output.InstallTextMate(_registryOptions);
+
+                _textMateInstallation.SetGrammar(_registryOptions.GetScopeByLanguageId(_registryOptions.GetLanguageByExtension(".xml").Id));
+                _textMateInstallation2.SetGrammar(_registryOptions.GetScopeByLanguageId(_registryOptions.GetLanguageByExtension(".cs").Id));
+
+                input.TextChanged += (sender, e) =>
+                {
+                    output.Text = Converter.Convert(input.Text);
+                };
             }
         }
 

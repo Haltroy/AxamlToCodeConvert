@@ -26,6 +26,11 @@ https://github.com/haltroy/AxamlToCodeConvert/blob/main/LICENSE
 				<Separator />
 				<MenuItem Header="Quit" Click="Quit" />
 			</MenuItem>
+			<MenuItem Header="Dictionary">
+				<MenuItem Header="Reload" Click="ReloadDict" />
+				<MenuItem Header="Open dictionaries folder..." Click="OpenDict" />
+				<MenuItem Header="Install a dictionary..." Click="InstallDict" />
+			</MenuItem>
 			<MenuItem Header="About" Click="About" />
 		</Menu>
 		<ui:TabView Grid.Row="1" CloseButtonOverlayMode="OnPointerOver" Name="Tabs" />

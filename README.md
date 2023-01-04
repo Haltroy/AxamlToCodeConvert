@@ -8,8 +8,9 @@ NOTE: This program will **NOT** give you a proper conversion so you mostly have 
 ## Features
 
  - Convert Axaml to `Init()` code.
- - Support for custom controls.
- - Support for bindings.
+ - Support for custom controls (the ones that do provide you with a dictonary file).
+ - View code (thanks for [`AvalonEdit`](https://github.com/AvaloniaUI/AvaloniaEdit) for syntax highligting)
+ - Convert multiple AXAMLs (thanks to [`FluentAvalonia`](https://github.com/amwx/FluentAvalonia) for tab control)
 
 
 ## Build
@@ -20,7 +21,7 @@ To build, get hte source code:
   - by using [GitHub Desktop](https://desktop.github.com/)
   - via command: `git clone https://haltroy.com/AxamlToCodeConvert`
 
-Then, open a terminal app (CMD, Konsole, Windows Terminal, Powershell etc.) and navigate to the folder and execute any of these commands:
+Then, open a terminal app (CMD, Konsole, Terminal, Powershell etc.) and navigate to the folder and execute any of these commands:
   - To run: `dotnet run`
   - To build: `dotnet build`
      - Executable will be in the `bin\Debug` folder.
@@ -31,11 +32,9 @@ Then, open a terminal app (CMD, Konsole, Windows Terminal, Powershell etc.) and 
 ## Usage
 
 1. Either [download the app](https://github.com/haltroy/AxamlToCodeConvert/releases) or build the app. Then execute it.
-2. Load a AXAML file by either using `Open a File` option in top or pasting the AXAMl code into the `AXAML:` field.
-3. It will automatically generate the `Init()` code in the `Init():` field.
-4. Select and copy all of the generated text and head back to your code editor. Open the `.axaml.cs file.
-5. Paste it somewhere inside the window/usercontrol class.
-6. Fix the code.
-7. In the `InitializeComponent()` void of your window/usercontrol, replace `AvaloniaXamlLoader.Load(this);` with `Init();` .
-    - Alternatively, you can remove the `InitializeComponent()` void and replace `InitializeComponent();` in the constructor (`public YourWindow()`) with `Init();`.
-8. Now you can access your controls from just `myControl.` instead of `FindControl<Its type here>("Name of it here").`
+2. Load a AXAML file by either using `File -> Open a File` option or by pressing the `+` in top.
+3. It will automatically generate the `Init()` code like a `Designer.cs` file in the `Designer.cs:` field.
+4. Save it to the location of AXAML file. Open the `.axaml.cs file.
+5. Fix the code.
+6. Remove the constructor from your class.
+7. Now you can access your controls from just `myControl.` instead of `FindControl<Its type here>("Name of it here").`
